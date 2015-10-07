@@ -40,6 +40,9 @@ SCRIP_COAWST Wrapper Files Description
 NOT USED BUT PART OF ORIGINAL SCRIP PACKAGE
 18. remap_bilinear.f*    --> bilinear interp
 19. remap_bicubic.f*     --> bicubic  interp
+20. remap.f*             --> remapping module
+21. scrip_test_repeat.f* --> testing SCRIP
+22. scrip_test.f*        --> testing SCRIP
 
 Notes:
     - * refers to Fortran files that were part of original SCRIP Package and have not been altered
