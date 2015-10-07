@@ -1,5 +1,15 @@
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !
+!
+!     Note SCRIP_COAWST required the original file from SCRIP package 
+!     to be converted into a module including a subroutine. 
+!     -Arrays have been read in and deallocated in the end of file 
+!        
+!---- Written by John C. Warner-----------------------------------------
+!-----         Tarandeep S. Kalra --------------------------------------
+!--------------Date: 10/04/2015-----------------------------------------
+!
+!-------ORIGINAL SCRIP COMMENTS----------------------------------------- 
 !     This routine is the driver for computing the addresses and weights 
 !     for interpolating between two grids on a sphere.
 !
@@ -220,14 +230,10 @@
      &                 interp_file1, interp_file2, output_opt)
 
 !-----------------------------------------------------------------------
-!     MAY NEED TO DEALLOCATE HERE 
-       write(6,*), "reached the end"
-      stop 
-!      deallocate ( grid1_lon_rho, grid1_lat_rho )
-!      deallocate ( grid1_lon_psi, grid1_lat_psi )
-!      deallocate ( grid2_lon_rho, grid2_lat_rho )
-!      deallocate ( grid2_lon_psi, grid2_lat_psi )
-!      deallocate ( grid2_lon_psi, grid2_lat_psi )
+!     DEALLOCATE HERE for SCRIP_COAWST package  
+      write(stdout,*), "-------------------------------------------"
+      write(stdout,*), "Reached the end of mapping one set of grids"
+!     deallocate arrays from grids.f
       deallocate ( grid1_dims, grid2_dims )
       deallocate ( grid1_area, grid2_area )
       deallocate ( grid1_frac, grid2_frac )
@@ -237,7 +243,11 @@
       deallocate ( grid1_corner_lon, grid2_corner_lon)
       deallocate ( grid1_corner_lat, grid2_corner_lat)
       deallocate ( grid1_bound_box, grid2_bound_box)
-
+      deallocate( bin_addr1, bin_addr2, bin_lats, bin_lons)
+      deallocate( grid1_add_map1, grid2_add_map1) 
+      deallocate( wts_map1) 
+!     deallocate arrays from remap_conserv.f
+      deallocate(link_add1,link_add2)
 
 !-----------------------------------------------------------------------
       end subroutine scrip_package

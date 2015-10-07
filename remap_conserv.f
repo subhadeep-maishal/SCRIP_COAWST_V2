@@ -1,5 +1,19 @@
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Z!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !
+!     Note SCRIP_COAWST required the original file from SCRIP package 
+!     to be slightly modified for allocating arrays in subroutine 
+!     "store_link_consrv". Variables-link_add1" and "link_add2" 
+!     have been made global and pulled out of original subroutine 
+!     They are dellocated in scrip.f. Variable "first_call" has been 
+!     pulled out as well and defined in subrouitne "remap_conserv" so 
+!     that for each combination of incoming grids, it is set to true
+! 
+!---- Written by John C. Warner-----------------------------------------
+!-----         Tarandeep S. Kalra --------------------------------------
+!--------------Date: 08/04/2015-----------------------------------------
+!
+!***********************************************************************
+!     ------ ORIGINAL SCRIP COMMENTS -----------------------------------
 !     this module contains necessary routines for computing addresses
 !     and weights for a conservative interpolation  between any two 
 !     grids on a sphere.  the weights are computed by performing line 
@@ -68,6 +82,10 @@
      &     srch_corner_lat,  ! lat of each corner of srch cells
      &     srch_corner_lon   ! lon of each corner of srch cells
 
+
+      integer (kind=int_kind), dimension(:,:), allocatable, save ::
+     &        link_add1,  ! min,max link add to restrict search
+     &        link_add2   ! min,max link add to restrict search
 !***********************************************************************
 
       contains
@@ -109,6 +127,10 @@
      &        lrevers, ! flag for reversing direction of segment
      &        lbegin   ! flag for first integration of a segment
 
+      logical (kind=log_kind) ::  first_call  ! First call is a flag
+!     used by scrip_coawst for allocating properly in subroutine
+!     store_conserv
+ 
       logical (kind=log_kind), dimension(:), allocatable ::
      &        srch_mask   ! mask for restricting searches
 
@@ -125,6 +147,7 @@
                                                    ! full segment
 
       real (kind=dbl_kind), dimension(6) :: weights ! local wgt array
+
 
 !-----------------------------------------------------------------------
 !
@@ -151,6 +174,8 @@
       allocate(srch_mask(grid2_size))
 
       print *,'grid1 sweep'
+      first_call=.true.  ! first_call set to true 
+
       do grid1_add = 1,grid1_size
 
         !***
@@ -322,11 +347,12 @@
             !  print *,grid2_corner_lon(:,grid2_add)
             !  print *,beglat,beglon,intrsct_lat,intrsct_lon
             !endif
-
+     
             if (grid2_add /= 0) then
               if (grid1_mask(grid1_add)) then
                 call timer_start(4)
-                call store_link_cnsrv(grid1_add, grid2_add, weights)
+                call store_link_cnsrv(grid1_add, grid2_add, weights, 
+     &                                first_call)
                 call timer_stop(4)
                 grid1_frac(grid1_add) = grid1_frac(grid1_add) + 
      &                                  weights(1)
@@ -363,7 +389,6 @@
         !*** start on next cell
 
         deallocate(srch_add, srch_corner_lat, srch_corner_lon)
-
       end do
 
       deallocate(srch_mask)
@@ -377,6 +402,7 @@
       allocate(srch_mask(grid1_size))
 
       print *,'grid2 sweep '
+   
       do grid2_add = 1,grid2_size
         
         !***
@@ -541,7 +567,8 @@
             if (.not. lcoinc .and. grid1_add /= 0) then
               if (grid1_mask(grid1_add)) then
                 call timer_start(8)
-                call store_link_cnsrv(grid1_add, grid2_add, weights)
+                call store_link_cnsrv(grid1_add, grid2_add, weights, 
+     &                                first_call)
                 call timer_stop(8)
                 grid1_frac(grid1_add) = grid1_frac(grid1_add) + 
      &                                  weights(1)
@@ -637,7 +664,8 @@
       endif
 
       if (grid1_add /= 0 .and. grid2_add /=0) then
-        call store_link_cnsrv(grid1_add, grid2_add, weights)
+        call store_link_cnsrv(grid1_add, grid2_add, weights, 
+     &                        first_call)
 
         grid1_frac(grid1_add) = grid1_frac(grid1_add) + 
      &                          weights(1)
@@ -689,7 +717,8 @@
       endif
 
       if (grid1_add /= 0 .and. grid2_add /=0) then
-        call store_link_cnsrv(grid1_add, grid2_add, weights)
+        call store_link_cnsrv(grid1_add, grid2_add, weights, 
+     &                        first_call)
 
         grid1_frac(grid1_add) = grid1_frac(grid1_add) + 
      &                          weights(1)
@@ -910,8 +939,8 @@
           endif
         end do
       endif
-!-----------------------------------------------------------------------
 
+!-----------------------------------------------------------------------
       end subroutine remap_conserv
 
 !***********************************************************************
@@ -2068,7 +2097,7 @@
 
 !***********************************************************************
 
-      subroutine store_link_cnsrv(add1, add2, weights)
+      subroutine store_link_cnsrv(add1, add2, weights, first_call)
 
 !-----------------------------------------------------------------------
 !
@@ -2088,6 +2117,8 @@
      &        add1,  ! address on grid1
      &        add2   ! address on grid2
 
+      logical (kind=log_kind), intent(inout) :: first_call
+
       real (kind=dbl_kind), dimension(:), intent(in) ::
      &        weights ! array of remapping weights for this link
 
@@ -2098,12 +2129,8 @@
 !-----------------------------------------------------------------------
 
       integer (kind=int_kind) :: nlink, min_link, max_link ! link index
+!     logical (kind=log_kind), save :: first_call
 
-      integer (kind=int_kind), dimension(:,:), allocatable, save ::
-     &        link_add1,  ! min,max link add to restrict search
-     &        link_add2   ! min,max link add to restrict search
-
-      logical (kind=log_kind), save :: first_call = .true.
 
 !-----------------------------------------------------------------------
 !
@@ -2134,7 +2161,6 @@
           max_link = 0
         endif
       endif
-
 !-----------------------------------------------------------------------
 !
 !     if the link already exists, add the weight to the current weight
@@ -2189,7 +2215,6 @@
       link_add2(2,add2) = num_links_map1
 
 !-----------------------------------------------------------------------
-
       end subroutine store_link_cnsrv
 
 !***********************************************************************

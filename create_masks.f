@@ -10,7 +10,7 @@
 !     addresses and weights for interpolating between two grids on 
 !     a sphere.
 !
-!---- Rewritten by John C. Warner-------------------------------------- 
+!---- Written by John C. Warner-------------------------------------- 
 !-----         Tarandeep S. Kalra -------------------------------------
 !--------------Date: 08/20/2015----------------------------------------
 !***********************************************************************
@@ -91,10 +91,11 @@
           map2_name='unknown' 
                  
           write(stdout,*)"============================================="
+          write(stdout,*)"Begin mapping between the two grids"
+          write(stdout,*)"---------------------------------------------"
           write(stdout,*)"The interp file is: ", interp_file1
           write(stdout,*)"The src grid is: ", roms_grids(mo)
           write(stdout,*)"The dst grid is: ", swan_coord(mw)
-          write(stdout,*)"============================================="
 
           grid1_file=roms_grids(mo)
           grid2_file=swan_coord(mw)
@@ -119,12 +120,8 @@
         end do 
       end do
 ! DOUBLE CHECK THESE LINES ARE OKAY 
-      do mo=1,Ngrids_roms
-        do mw=1,Ngrids_swan 
-          deallocate(ngrd_rm(mo)%src_mask,ngrd_sw(mw)%dst_mask)
-        end do
-      end do   
-
+      deallocate(ngrd_rm(Ngrids_roms)%src_mask)
+      deallocate(ngrd_sw(Ngrids_swan)%dst_mask)
       end subroutine ocn2wav_mask
 !======================================================================
       subroutine wav2ocn_mask()
@@ -184,17 +181,18 @@
         do mw=1,Ngrids_swan 
           write(mw_string,'(i1)')mw
           write(mo_string,'(i1)')mo
-          interp_file1='ocn'//trim(mw_string)//'_to_'//'wav'//
+          interp_file1='wav'//trim(mw_string)//'_to_'//'ocn'//
      &                       trim(mo_string)//'_weights.nc'
           interp_file2='unknown'
           map1_name='SWAN to ROMS distwgt Mapping'
           map2_name='unknown' 
                  
           write(stdout,*)"============================================="
+          write(stdout,*)"Begin mapping between the two grids"
+          write(stdout,*)"---------------------------------------------"
           write(stdout,*)"The interp file is: ", interp_file1
           write(stdout,*)"The src grid is: ", swan_coord(mw)
           write(stdout,*)"The dst grid is: ", roms_grids(mo)
-          write(stdout,*)"============================================="
 
           grid1_file=swan_coord(mw)
           grid2_file=roms_grids(mo)
@@ -219,11 +217,8 @@
         end do 
       end do
 ! DOUBLE CHECK THESE LINES ARE OKAY 
-      do mw=1,Ngrids_swan 
-        do mo=1,Ngrids_roms
-          deallocate(ngrd_sw(mw)%src_mask,ngrd_rm(mw)%dst_mask)
-        end do
-      end do  
+      deallocate(ngrd_sw(Ngrids_swan)%src_mask)
+      deallocate(ngrd_rm(Ngrids_roms)%dst_mask)
       end subroutine wav2ocn_mask
           
       subroutine ocn2wrf_mask()
@@ -290,10 +285,11 @@
           map2_name='unknown' 
                  
           write(stdout,*)"============================================="
+          write(stdout,*)"Begin mapping between the two grids"
+          write(stdout,*)"---------------------------------------------"
           write(stdout,*)"The interp file is: ", interp_file1
           write(stdout,*)"The src grid is: ", roms_grids(mo)
           write(stdout,*)"The dst grid is: ", wrf_grids(ma)
-          write(stdout,*)"============================================="
 
           grid1_file=roms_grids(mo)
           grid2_file=wrf_grids(ma)
@@ -318,11 +314,8 @@
         end do 
       end do
 ! DOUBLE CHECK THESE LINES ARE OKAY 
-      do mo=1,Ngrids_roms
-       do ma=1,Ngrids_wrf
-          deallocate(ngrd_rm(mo)%src_mask,ngrd_wr(ma)%dst_mask)
-        end do
-      end do  
+      deallocate(ngrd_rm(Ngrids_roms)%src_mask)
+      deallocate(ngrd_wr(Ngrids_wrf)%dst_mask)
       end subroutine ocn2wrf_mask
 
       subroutine wrf2ocn_mask()
@@ -349,20 +342,20 @@
         ny=ngrd_rm(mo)%eta_size
         allocate(ngrd_rm(mo)%dst_mask(nx,ny))   
       end do 
-!  Save the grid mask to dst mask
-      do mo=1,Ngrids_roms
-        do j=1,ngrd_rm(mo)%eta_size
-          do i=1,ngrd_rm(mo)%xi_size
-            ngrd_rm(mo)%dst_mask(i,j)=ngrd_rm(mo)%mask_rho_o(i,j)
-          end do
-        end do 
-      end do 
 !  Save the wrf grid mask to src_mask 
       do ma=1,Ngrids_wrf
         do j=1,ngrd_wr(ma)%sn_size
           do i=1,ngrd_wr(ma)%we_size
             ngrd_wr(ma)%src_mask(i,j)=ngrd_wr(ma)%mask_rho_a(i,j)
           end do 
+        end do 
+      end do 
+!  Save the grid mask to dst mask
+      do mo=1,Ngrids_roms
+        do j=1,ngrd_rm(mo)%eta_size
+          do i=1,ngrd_rm(mo)%xi_size
+            ngrd_rm(mo)%dst_mask(i,j)=ngrd_rm(mo)%mask_rho_o(i,j)
+          end do
         end do 
       end do 
 !  Determine destination masks for the WRF grids using ROMS as the source.
@@ -389,13 +382,14 @@
           map2_name='unknown' 
                  
           write(stdout,*)"============================================="
+          write(stdout,*)"Begin mapping between the two grids"
+          write(stdout,*)"---------------------------------------------"
           write(stdout,*)"The interp file is: ", interp_file1
           write(stdout,*)"The src grid is: ", wrf_grids(ma)
           write(stdout,*)"The dst grid is: ", roms_grids(mo)
-          write(stdout,*)"============================================="
 
-          grid1_file=roms_grids(mo)
-          grid2_file=wrf_grids(ma)
+          grid1_file=wrf_grids(ma)
+          grid2_file=roms_grids(mo)
 
           call scrip_package(grid1_file, grid2_file, 
      &                             ngrd_wr(ma)%we_size,
@@ -417,11 +411,8 @@
         end do 
       end do
 ! DOUBLE CHECK THESE LINES ARE OKAY 
-      do ma=1,Ngrids_wrf
-        do mo=1,Ngrids_roms
-          deallocate(ngrd_wr(ma)%src_mask,ngrd_rm(mo)%dst_mask)
-        end do
-      end do  
+      deallocate(ngrd_wr(Ngrids_wrf)%src_mask)
+      deallocate(ngrd_rm(Ngrids_roms)%dst_mask)
       end subroutine wrf2ocn_mask
           
       subroutine wrf2wav_mask()
@@ -488,10 +479,11 @@
           map2_name='unknown' 
                  
           write(stdout,*)"============================================="
+          write(stdout,*)"Begin mapping between the two grids"
+          write(stdout,*)"---------------------------------------------"
           write(stdout,*)"The interp file is: ", interp_file1
           write(stdout,*)"The src grid is: ", wrf_grids(ma)
           write(stdout,*)"The dst grid is: ", swan_coord(mw)
-          write(stdout,*)"============================================="
 
           grid1_file=wrf_grids(ma)
           grid2_file=swan_coord(mw)
@@ -516,11 +508,8 @@
         end do 
       end do
 ! DOUBLE CHECK THESE LINES ARE OKAY 
-      do ma=1,Ngrids_wrf
-        do mw=1,Ngrids_swan
-          deallocate(ngrd_wr(ma)%src_mask,ngrd_sw(mw)%dst_mask)
-        end do
-      end do  
+      deallocate(ngrd_wr(Ngrids_wrf)%src_mask)
+      deallocate(ngrd_sw(Ngrids_swan)%dst_mask)
       end subroutine wrf2wav_mask
           
       subroutine wav2wrf_mask()
@@ -565,7 +554,7 @@
       end do 
 !  Determine destination masks for the WRF grids using SWAN as the source.
       if ((Ngrids_wrf>0).and.(Ngrids_swan>0)) then 
-        do ma=1,Ngrids_swan
+        do mw=1,Ngrids_swan
           if (Ngrids_swan>mw) then ! mask out child portion of this ocn grid
             do j=ngrd_sw(mw)%jstr_w,ngrd_sw(mw)%jend_w
               do i=ngrd_sw(mw)%istr_w,ngrd_sw(mw)%iend_w
@@ -587,10 +576,11 @@
           map2_name='unknown' 
                  
           write(stdout,*)"============================================="
+          write(stdout,*)"Begin mapping between the two grids"
+          write(stdout,*)"---------------------------------------------"
           write(stdout,*)"The interp file is: ", interp_file1
           write(stdout,*)"The src grid is: ", swan_coord(mw)
           write(stdout,*)"The dst grid is: ", wrf_grids(ma)
-          write(stdout,*)"============================================="
 
           grid1_file=swan_coord(mw)
           grid2_file=wrf_grids(ma)
@@ -614,12 +604,9 @@
      &                                    ngrd_wr(ma)%dst_mask)
         end do 
       end do
+      deallocate(ngrd_sw(Ngrids_swan)%src_mask)
+      deallocate(ngrd_wr(Ngrids_wrf)%dst_mask)
 ! DOUBLE CHECK THESE LINES ARE OKAY 
-      do mw=1,Ngrids_swan
-        do ma=1,Ngrids_wrf
-          deallocate(ngrd_sw(mw)%src_mask,ngrd_wr(ma)%dst_mask)
-        end do
-      end do  
       end subroutine wav2wrf_mask
 
       end module create_masks 

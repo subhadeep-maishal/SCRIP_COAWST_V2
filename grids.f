@@ -1,4 +1,13 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!     Note SCRIP_COAWST required the original file from SCRIP package 
+!     to be converted into a module including a subroutine. 
+!     -Arrays come in through scrip.f and read here for both grids1&2. 
+!        
+!---- Written by John C. Warner-----------------------------------------
+!-----         Tarandeep S. Kalra --------------------------------------
+!--------------Date: 10/04/2015-----------------------------------------
+! 
+!-----ORIGINAL SCRIP COMMENTS-------------------------------------------
 !
 !     This module reads in and initializes two grids for remapping.
 !     NOTE: grid1 must be the master grid -- the grid that determines
@@ -237,17 +246,22 @@
 !
           grid1_corner_lon(1,counter)=grid1_lon_psi(i,j)*deg2rad
           grid1_corner_lat(1,counter)=grid1_lat_psi(i,j)*deg2rad
-          grid1_corner_lon(2,counter)=grid1_lon_psi(i,j+1)*deg2rad
-          grid1_corner_lat(2,counter)=grid1_lat_psi(i,j+1)*deg2rad
+          grid1_corner_lon(2,counter)=grid1_lon_psi(i+1,j)*deg2rad
+          grid1_corner_lat(2,counter)=grid1_lat_psi(i+1,j)*deg2rad
           grid1_corner_lon(3,counter)=grid1_lon_psi(i+1,j+1)*deg2rad
           grid1_corner_lat(3,counter)=grid1_lat_psi(i+1,j+1)*deg2rad
-          grid1_corner_lon(4,counter)=grid1_lon_psi(i+1,j)*deg2rad
-          grid1_corner_lat(4,counter)=grid1_lat_psi(i+1,j)*deg2rad
+          grid1_corner_lon(4,counter)=grid1_lon_psi(i,j+1)*deg2rad
+          grid1_corner_lat(4,counter)=grid1_lat_psi(i,j+1)*deg2rad
 !
+         write(60,*)grid1_center_lat(counter)
+          write(61,*)grid1_corner_lon(1,counter)
+          write(62,*)grid1_corner_lon(2,counter)
+          write(63,*)grid1_corner_lon(3,counter)
+          write(64,*)grid1_corner_lon(4,counter)
           imask(counter)=src_mask(i,j)
         end do 
       end do
- 
+                             
       where (imask == 1)
         grid1_mask = .true.
       elsewhere
@@ -266,6 +280,7 @@
       grid2_corners=4
       grid2_rank=2
       grid2_size=grid2_xdim*grid2_ydim 
+      
       write(stdout,*)"----------------------------------------------"
       write(stdout,*)"grid2 dimensions=",grid2_xdim, grid2_ydim
       write(stdout,*)"----------------------------------------------"
@@ -285,6 +300,7 @@
       allocate( grid2_corner_lat(grid2_corners, grid2_size))
       allocate( grid2_bound_box(4, grid2_size))
 
+        
       grid2_dims(1)=grid2_xdim
       grid2_dims(2)=grid2_ydim
 
@@ -304,15 +320,19 @@
 !
           grid2_corner_lon(1,counter)=grid2_lon_psi(i,j)*deg2rad
           grid2_corner_lat(1,counter)=grid2_lat_psi(i,j)*deg2rad
-          grid2_corner_lon(2,counter)=grid2_lon_psi(i,j+1)*deg2rad
-          grid2_corner_lat(2,counter)=grid2_lat_psi(i,j+1)*deg2rad
+          grid2_corner_lon(2,counter)=grid2_lon_psi(i+1,j)*deg2rad
+          grid2_corner_lat(2,counter)=grid2_lat_psi(i+1,j)*deg2rad
           grid2_corner_lon(3,counter)=grid2_lon_psi(i+1,j+1)*deg2rad
           grid2_corner_lat(3,counter)=grid2_lat_psi(i+1,j+1)*deg2rad
-          grid2_corner_lon(4,counter)=grid2_lon_psi(i+1,j)*deg2rad
-          grid2_corner_lat(4,counter)=grid2_lat_psi(i+1,j)*deg2rad
+          grid2_corner_lon(4,counter)=grid2_lon_psi(i,j+1)*deg2rad
+          grid2_corner_lat(4,counter)=grid2_lat_psi(i,j+1)*deg2rad
 !
+          write(65,*)grid2_center_lat(counter)
+          write(66,*)grid2_corner_lat(1,counter)
+          write(67,*)grid2_corner_lat(2,counter)
+          write(68,*)grid2_corner_lat(3,counter)
+          write(69,*)grid2_corner_lat(4,counter)
           imask(counter)=dst_mask(i,j)
-          write(61,*)dst_mask(i,j)
         end do 
       end do 
 

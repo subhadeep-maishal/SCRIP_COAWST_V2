@@ -9,7 +9,7 @@
 !     addresses and weights for interpolating between two grids on 
 !     a sphere.
 !
-!---- Rewritten by John C. Warner-------------------------------------- 
+!---- Written by John C. Warner-------------------------------------- 
 !-----         Tarandeep S. Kalra -------------------------------------
 !--------------Date: 08/04/2015----------------------------------------
 !***********************************************************************
@@ -70,9 +70,9 @@
         call netcdf_error_handler(ncstat)
 
 !      Read variable for rho points and masking id 
-        ncstat=nf_inq_varid(nc_file_id,'XLAT',nc_grdlon_id)
+        ncstat=nf_inq_varid(nc_file_id,'XLONG',nc_grdlon_id)
         call netcdf_error_handler(ncstat)
-        ncstat=nf_inq_varid(nc_file_id,'XLONG',nc_grdlat_id)
+        ncstat=nf_inq_varid(nc_file_id,'XLAT',nc_grdlat_id)
         call netcdf_error_handler(ncstat)
         ncstat=nf_inq_varid(nc_file_id,'LANDMASK',nc_grdmsk_id)
         call netcdf_error_handler(ncstat)
@@ -104,7 +104,8 @@
             do i=1,nx
               ngrd_wr(ma)%lon_rho_a(i,j)=lon_3drho_a(t,i,j)
               ngrd_wr(ma)%lat_rho_a(i,j)=lat_3drho_a(t,i,j)
-              ngrd_wr(ma)%mask_rho_a(i,j)=mask_3drho_a(t,i,j)
+!      make the masking consistent of land/sea with respect to ROMS convention
+              ngrd_wr(ma)%mask_rho_a(i,j)=1-mask_3drho_a(t,i,j)
             end do 
           end do
         end do

@@ -5,7 +5,7 @@
 !     addresses and weights for interpolating between two grids on 
 !     a sphere.
 !
-!---- Rewritten by John C. Warner-------------------------------------- 
+!---- Written by John C. Warner-------------------------------------- 
 !-----         Tarandeep S. Kalra -------------------------------------
 !--------------Date: 08/04/2015----------------------------------------
 !======================================================================
@@ -30,12 +30,12 @@
       call load_swan_grid()
       call load_roms_grid()
       call load_wrf_grid()
-      call ocn2wav_mask() 
+!      call ocn2wav_mask() 
 !      call wav2ocn_mask() 
 !      call wrf2ocn_mask() 
-!      call ocn2wrf_mask() 
+!       call ocn2wrf_mask() 
 !      call wav2wrf_mask() 
-!      call wrf2wav_mask() 
+       call wrf2wav_mask() 
 !      call scrip_package()
        
       end program coawst_scrip
