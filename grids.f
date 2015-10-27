@@ -253,12 +253,8 @@
           grid1_corner_lon(4,counter)=grid1_lon_psi(i,j+1)*deg2rad
           grid1_corner_lat(4,counter)=grid1_lat_psi(i,j+1)*deg2rad
 !
-         write(60,*)grid1_center_lat(counter)
-          write(61,*)grid1_corner_lon(1,counter)
-          write(62,*)grid1_corner_lon(2,counter)
-          write(63,*)grid1_corner_lon(3,counter)
-          write(64,*)grid1_corner_lon(4,counter)
           imask(counter)=src_mask(i,j)
+!          
         end do 
       end do
                              
@@ -327,12 +323,8 @@
           grid2_corner_lon(4,counter)=grid2_lon_psi(i,j+1)*deg2rad
           grid2_corner_lat(4,counter)=grid2_lat_psi(i,j+1)*deg2rad
 !
-          write(65,*)grid2_center_lat(counter)
-          write(66,*)grid2_corner_lat(1,counter)
-          write(67,*)grid2_corner_lat(2,counter)
-          write(68,*)grid2_corner_lat(3,counter)
-          write(69,*)grid2_corner_lat(4,counter)
           imask(counter)=dst_mask(i,j)
+!         
         end do 
       end do 
 
