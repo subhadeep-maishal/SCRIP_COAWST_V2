@@ -120,12 +120,12 @@
         end do 
       end do
 ! DOUBLE CHECK THESE LINES ARE OKAY 
-       do mo=1,Ngrids_roms
-          deallocate(ngrd_rm(mo)%src_mask)
-         end do
-         do mw=1,Ngrids_swan
-          deallocate(ngrd_sw(mw)%dst_mask)
-       end do
+      do mo=1,Ngrids_roms
+        deallocate(ngrd_rm(mo)%src_mask)
+      end do
+      do mw=1,Ngrids_swan
+        deallocate(ngrd_sw(mw)%dst_mask)
+      end do
       end subroutine ocn2wav_mask
 
 !======================================================================
@@ -223,12 +223,12 @@
         end do 
       end do
 ! DOUBLE CHECK THESE LINES ARE OKAY 
-       do mw=1,Ngrids_swan
-          deallocate(ngrd_sw(mw)%src_mask)
-       end do
-       do mo=1,Ngrids_roms
-          deallocate(ngrd_rm(mo)%dst_mask)
-       end do
+      do mw=1,Ngrids_swan
+        deallocate(ngrd_sw(mw)%src_mask)
+      end do
+      do mo=1,Ngrids_roms
+        deallocate(ngrd_rm(mo)%dst_mask)
+      end do
 
       end subroutine wav2ocn_mask
           
@@ -327,12 +327,12 @@
         end do 
       end do
 ! DOUBLE CHECK THESE LINES ARE OKAY 
-       do mo=1,Ngrids_roms
-          deallocate(ngrd_rm(mo)%src_mask)
-       end do
-       do ma=1,Ngrids_wrf
-          deallocate(ngrd_wr(ma)%dst_mask)
-       end do
+      do mo=1,Ngrids_roms
+        deallocate(ngrd_rm(mo)%src_mask)
+      end do
+      do ma=1,Ngrids_wrf
+        deallocate(ngrd_wr(ma)%dst_mask)
+      end do
 
       end subroutine ocn2atm_mask
 
@@ -431,12 +431,12 @@
         end do 
       end do
 ! DOUBLE CHECK THESE LINES ARE OKAY 
-       do ma=1,Ngrids_wrf
-          deallocate(ngrd_wr(ma)%src_mask)
-       end do
-       do mo=1,Ngrids_roms
-          deallocate(ngrd_rm(mo)%dst_mask)
-       end do
+      do ma=1,Ngrids_wrf
+        deallocate(ngrd_wr(ma)%src_mask)
+      end do
+      do mo=1,Ngrids_roms
+        deallocate(ngrd_rm(mo)%dst_mask)
+      end do
 
       end subroutine atm2ocn_mask
           
@@ -533,12 +533,12 @@
         end do 
       end do
 ! DOUBLE CHECK THESE LINES ARE OKAY 
-       do ma=1,Ngrids_wrf
-          deallocate(ngrd_rm(ma)%src_mask)
-       end do
-       do mw=1,Ngrids_swan
-          deallocate(ngrd_sw(mw)%dst_mask)
-       end do
+      do ma=1,Ngrids_wrf
+        deallocate(ngrd_rm(ma)%src_mask)
+      end do
+      do mw=1,Ngrids_swan
+        deallocate(ngrd_sw(mw)%dst_mask)
+      end do
 
       end subroutine atm2wav_mask
           
@@ -635,12 +635,12 @@
         end do 
       end do
 ! DOUBLE CHECK THESE LINES ARE OKAY 
-       do mw=1,Ngrids_swan
-          deallocate(ngrd_sw(mw)%src_mask)
-       end do
-       do ma=1,Ngrids_wrf
-          deallocate(ngrd_wr(ma)%dst_mask)
-       end do
+      do mw=1,Ngrids_swan
+        deallocate(ngrd_sw(mw)%src_mask)
+      end do
+      do ma=1,Ngrids_wrf
+        deallocate(ngrd_wr(ma)%dst_mask)
+      end do
 
       end subroutine wav2atm_mask
 
