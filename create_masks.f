@@ -39,17 +39,17 @@
 
       implicit none 
 
+! Allocate the source mask 
+      do mo=1,Ngrids_roms
+        nx=ngrd_rm(mo)%xi_size
+        ny=ngrd_rm(mo)%eta_size
+        allocate(ngrd_rm(mo)%src_mask(nx,ny))   
+      end do 
 ! Allocate the destination mask 
       do mw=1,Ngrids_swan
         nx=ngrd_sw(mw)%Numx_swan
         ny=ngrd_sw(mw)%Numy_swan
         allocate(ngrd_sw(mw)%dst_mask(nx,ny))
-      end do 
-! Allocate the destination mask 
-      do mo=1,Ngrids_roms
-        nx=ngrd_rm(mo)%xi_size
-        ny=ngrd_rm(mo)%eta_size
-        allocate(ngrd_rm(mo)%src_mask(nx,ny))   
       end do 
 !  Save the ocean grid mask to src_mask 
       do mo=1,Ngrids_roms
@@ -120,10 +120,16 @@
         end do 
       end do
 ! DOUBLE CHECK THESE LINES ARE OKAY 
-      deallocate(ngrd_rm(Ngrids_roms)%src_mask)
-      deallocate(ngrd_sw(Ngrids_swan)%dst_mask)
+       do mo=1,Ngrids_roms
+          deallocate(ngrd_rm(mo)%src_mask)
+         end do
+         do mw=1,Ngrids_swan
+          deallocate(ngrd_sw(mw)%dst_mask)
+       end do
       end subroutine ocn2wav_mask
+
 !======================================================================
+
       subroutine wav2ocn_mask()
       implicit none 
 
@@ -136,7 +142,7 @@
       integer(int_kind)   :: mo, mw, nx, ny, grdsize
       integer(int_kind)   :: ncstat, nc_file_id
 
-! Allocate the destination mask 
+! Allocate the source mask 
       do mw=1,Ngrids_swan
         nx=ngrd_sw(mw)%Numx_swan
         ny=ngrd_sw(mw)%Numy_swan
@@ -217,11 +223,18 @@
         end do 
       end do
 ! DOUBLE CHECK THESE LINES ARE OKAY 
-      deallocate(ngrd_sw(Ngrids_swan)%src_mask)
-      deallocate(ngrd_rm(Ngrids_roms)%dst_mask)
+       do mw=1,Ngrids_swan
+          deallocate(ngrd_sw(mw)%src_mask)
+       end do
+       do mo=1,Ngrids_roms
+          deallocate(ngrd_rm(mo)%dst_mask)
+       end do
+
       end subroutine wav2ocn_mask
           
-      subroutine ocn2wrf_mask()
+!======================================================================
+
+      subroutine ocn2atm_mask()
       implicit none 
 
 !     local variables 
@@ -314,11 +327,18 @@
         end do 
       end do
 ! DOUBLE CHECK THESE LINES ARE OKAY 
-      deallocate(ngrd_rm(Ngrids_roms)%src_mask)
-      deallocate(ngrd_wr(Ngrids_wrf)%dst_mask)
-      end subroutine ocn2wrf_mask
+       do mo=1,Ngrids_roms
+          deallocate(ngrd_rm(mo)%src_mask)
+       end do
+       do ma=1,Ngrids_wrf
+          deallocate(ngrd_wr(ma)%dst_mask)
+       end do
 
-      subroutine wrf2ocn_mask()
+      end subroutine ocn2atm_mask
+
+!======================================================================
+
+      subroutine atm2ocn_mask()
       implicit none 
 
 !     local variables 
@@ -411,11 +431,16 @@
         end do 
       end do
 ! DOUBLE CHECK THESE LINES ARE OKAY 
-      deallocate(ngrd_wr(Ngrids_wrf)%src_mask)
-      deallocate(ngrd_rm(Ngrids_roms)%dst_mask)
-      end subroutine wrf2ocn_mask
+       do ma=1,Ngrids_wrf
+          deallocate(ngrd_wr(ma)%src_mask)
+       end do
+       do mo=1,Ngrids_roms
+          deallocate(ngrd_rm(mo)%dst_mask)
+       end do
+
+      end subroutine atm2ocn_mask
           
-      subroutine wrf2wav_mask()
+      subroutine atm2wav_mask()
       implicit none 
 
 !     local variables 
@@ -508,11 +533,16 @@
         end do 
       end do
 ! DOUBLE CHECK THESE LINES ARE OKAY 
-      deallocate(ngrd_wr(Ngrids_wrf)%src_mask)
-      deallocate(ngrd_sw(Ngrids_swan)%dst_mask)
-      end subroutine wrf2wav_mask
+       do ma=1,Ngrids_wrf
+          deallocate(ngrd_rm(ma)%src_mask)
+       end do
+       do mw=1,Ngrids_swan
+          deallocate(ngrd_sw(mw)%dst_mask)
+       end do
+
+      end subroutine atm2wav_mask
           
-      subroutine wav2wrf_mask()
+      subroutine wav2atm_mask()
       implicit none 
 
 !     local variables 
@@ -604,9 +634,14 @@
      &                                    ngrd_wr(ma)%dst_mask)
         end do 
       end do
-      deallocate(ngrd_sw(Ngrids_swan)%src_mask)
-      deallocate(ngrd_wr(Ngrids_wrf)%dst_mask)
 ! DOUBLE CHECK THESE LINES ARE OKAY 
-      end subroutine wav2wrf_mask
+       do mw=1,Ngrids_swan
+          deallocate(ngrd_sw(mw)%src_mask)
+       end do
+       do ma=1,Ngrids_wrf
+          deallocate(ngrd_wr(ma)%dst_mask)
+       end do
+
+      end subroutine wav2atm_mask
 
       end module create_masks 

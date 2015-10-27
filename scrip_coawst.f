@@ -30,13 +30,15 @@
       call load_swan_grid()
       call load_roms_grid()
       call load_wrf_grid()
+
       call ocn2wav_mask() 
+      call ocn2atm_mask() 
+
       call wav2ocn_mask() 
-      call wrf2ocn_mask() 
-      call ocn2wrf_mask() 
-      call wav2wrf_mask() 
-      call wrf2wav_mask() 
-      call scrip_package()
+      call wav2atm_mask() 
+
+      call atm2ocn_mask() 
+      call atm2wav_mask() 
        
       end program coawst_scrip
 
