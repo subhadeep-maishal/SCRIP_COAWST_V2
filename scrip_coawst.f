@@ -30,13 +30,13 @@
       call load_swan_grid()
       call load_roms_grid()
       call load_wrf_grid()
-!      call ocn2wav_mask() 
-!      call wav2ocn_mask() 
-!      call wrf2ocn_mask() 
-!       call ocn2wrf_mask() 
-!      call wav2wrf_mask() 
-       call wrf2wav_mask() 
-!      call scrip_package()
+      call ocn2wav_mask() 
+      call wav2ocn_mask() 
+      call wrf2ocn_mask() 
+      call ocn2wrf_mask() 
+      call wav2wrf_mask() 
+      call wrf2wav_mask() 
+      call scrip_package()
        
       end program coawst_scrip
 
@@ -67,18 +67,22 @@
       write(stdout,*) "Ngrid_swan=",Ngrids_swan
       write(stdout,*) "Ngrid_wrf =",Ngrids_wrf
       do i = 1,Ngrids_roms 
-        write(stdout,*) "User input roms grid",i,"=", roms_grids(i)
+        write(*,10)"Input ROMS grid",i,"=", roms_grids(i)
       end do 
       do i = 1,Ngrids_swan
-        write(stdout,*)"User input swan grid",i,"=", swan_coord(i)
-        write(stdout,*)"Input bathymtry file",i,"=", bath_file(i)
+        write(*,10)"Input SWAN grid",i,"=", swan_coord(i)
+        write(*,11)"Input SWAN bathymtry file",i,"=", bath_file(i)
       end do 
       do i = 1,Ngrids_wrf
-        write(stdout,*)"User input WRF grid ", i,"=", wrf_grids(i)
+        write(*,10)"Input WRF grid ", i,"=", wrf_grids(i)
       end do 
-      write(stdout,*)"Cartesian input In meters=", cartesian(1)
-      write(stdout,*)"Cartesian input In meters=", cartesian(2)
+      write(*,12)"Cartesian input In meters=", cartesian(1)
+      write(*,12)"Cartesian input In meters=", cartesian(2)
       write(stdout,*)"================================================"
+ 10   FORMAT(A16, 1X, I1, A3, 1X, A20)
+ 11   FORMAT(A25, 1X, I1, A3, 1X, A20)
+ 12   FORMAT(A27, 1X, A20)
+
 !     end do 
 
 
