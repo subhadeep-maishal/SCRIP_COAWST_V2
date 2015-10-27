@@ -237,14 +237,8 @@
 !         now middle o
           lon_psi(i,j)=(x1+x2)*half
           lat_psi(i,j)=(y1+y2)*half
-!          write(60,*) lon_psi(i,j), lat_psi(i,j) 
         end do 
       end do 
-!      do j=1,ny
-!        do i=1,nx
-!          write(61,*) lon_rho(i,j), lat_rho(i,j) 
-!        end do 
-!      end do 
       end subroutine create_psimesh
     
       end module read_swan
