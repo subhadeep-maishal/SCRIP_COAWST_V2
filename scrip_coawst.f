@@ -23,7 +23,7 @@
 
       implicit none 
 
-      open(unit=iunit,file='input_file',status='old',form='formatted')
+      open(unit=iunit,file='inputfile.in',status='old',form='formatted')
       call read_inputs()
       close(iunit)
 
@@ -82,7 +82,7 @@
       write(*,12)"Cartesian input In meters=", cartesian(2)
       write(stdout,*)"================================================"
  10   FORMAT(A16, 1X, I1, A3, 1X, A20)
- 11   FORMAT(A25, 1X, I1, A3, 1X, A20)
+ 11   FORMAT(A25, 2X, I1, A3, 1X, A20)
  12   FORMAT(A27, 1X, A20)
 
 !     end do 

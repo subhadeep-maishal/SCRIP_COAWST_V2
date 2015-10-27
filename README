@@ -3,7 +3,7 @@
 ************Readme file for using SCRIP_COAWST package*********************
 
 Input file
-   - "input_file"
+   - "inputfile.in"
 
 Compiling the code: 
    - "make clean"
