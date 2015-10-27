@@ -199,6 +199,7 @@
 
         num_srch_cells = 0
         do grid2_add = min_add,max_add
+        
           srch_mask(grid2_add) = (grid2_bound_box(1,grid2_add) <= 
      &                            grid1_bound_box(2,grid1_add)) .and.
      &                           (grid2_bound_box(2,grid2_add) >= 
@@ -698,7 +699,6 @@
           exit pole_loop4
         endif
       end do pole_loop4
-
       if (grid1_add /=0) then
         grid1_area(grid1_add) = grid1_area(grid1_add) + weights(1)
         grid1_centroid_lat(grid1_add) = 
@@ -900,7 +900,6 @@
       end do
 
       do n=1,grid2_size
-
         select case(norm_opt)
         case (norm_opt_dstarea)
           norm_factor = grid2_frac(grid2_add)
@@ -940,6 +939,8 @@
         end do
       endif
 
+      deallocate(grid1_centroid_lat, grid1_centroid_lon)
+      deallocate(grid2_centroid_lat, grid2_centroid_lon)
 !-----------------------------------------------------------------------
       end subroutine remap_conserv
 
