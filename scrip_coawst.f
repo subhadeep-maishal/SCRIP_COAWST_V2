@@ -10,7 +10,7 @@
 !--------------Date: 08/04/2015----------------------------------------
 !======================================================================
 
-      program coawst_scrip 
+      program scrip_coawst
 
       use kinds_mod
       use constants
@@ -23,26 +23,58 @@
 
       implicit none 
 
-      open(unit=iunit,file='inputfile.in',status='old',form='formatted')
-      call read_inputs()
+!     local variables
+      character(len=char_len)   :: inputfile, arg1
+
+!     Reading input file 
+      call getarg(1,arg1)
+      inputfile = arg1
+      write(stdout,*) "---------------------------------------------"
+      write(stdout,*) "Enter the input file for SCRIP_COAWST package"
+      write(stdout,*) "---------------------------------------------"
+      read(stdin,*) inputfile
+      inputfile = adjustl(inputfile)
+      open(unit=iunit,file=inputfile,status='old',form='formatted')
+        call read_inputs()
       close(iunit)
+      
+!     Read the information from different grids 
+      if (Ngrids_swan>0) then 
+        call load_swan_grid()
+      end if 
+      if (Ngrids_roms>0) then 
+        call load_roms_grid()
+      end if 
+      if (Ngrids_wrf>0) then 
+        call load_wrf_grid()
+      end if 
 
-      call load_swan_grid()
-      call load_roms_grid()
-      call load_wrf_grid()
+!     Calculate interpolation weights between combinations of grids
+      if (Ngrids_roms>0.and.Ngrids_swan>0) then 
+        call ocn2wav_mask() 
+      end if 
+      if (Ngrids_roms>0.and.Ngrids_wrf>0)  then 
+        call ocn2atm_mask() 
+      end if 
 
-      call ocn2wav_mask() 
-      call ocn2atm_mask() 
+      if (Ngrids_swan>0.and.Ngrids_roms>0) then 
+        call wav2ocn_mask() 
+      end if 
+      if (Ngrids_swan>0.and.Ngrids_wrf>0)  then 
+        call wav2atm_mask() 
+      end if 
 
-      call wav2ocn_mask() 
-      call wav2atm_mask() 
-
-      call atm2ocn_mask() 
-      call atm2wav_mask() 
+      if (Ngrids_wrf>0.and.Ngrids_roms>0)  then 
+        call atm2ocn_mask() 
+      end if  
+      if (Ngrids_wrf>0.and.Ngrids_swan>0)  then 
+        call atm2wav_mask() 
+      end if 
        
-      end program coawst_scrip
+      end program scrip_coawst
 
 !======================================================================
+
       subroutine read_inputs()
       use kinds_mod
       use iounits 
@@ -69,7 +101,7 @@
       write(stdout,*) "Ngrid_swan=",Ngrids_swan
       write(stdout,*) "Ngrid_wrf =",Ngrids_wrf
       do i = 1,Ngrids_roms 
-        write(*,10)"Input ROMS grid",i,"=", roms_grids(i)
+        write(*,10)"Input ROMS grid",i,"=",roms_grids(i)
       end do 
       do i = 1,Ngrids_swan
         write(*,10)"Input SWAN grid",i,"=", swan_coord(i)

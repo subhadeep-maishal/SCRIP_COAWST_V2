@@ -35,6 +35,7 @@
 
       contains
 
+!======================================================================
       subroutine ocn2wav_mask()
 
       implicit none 
@@ -439,7 +440,9 @@
       end do
 
       end subroutine atm2ocn_mask
-          
+
+!======================================================================
+
       subroutine atm2wav_mask()
       implicit none 
 
@@ -530,18 +533,20 @@
      &                                    map1_name, map2_name, 
      &                                    ngrd_wr(ma)%src_mask,
      &                                    ngrd_sw(mw)%dst_mask)
-        end do 
+        end do
       end do
 ! DOUBLE CHECK THESE LINES ARE OKAY 
       do ma=1,Ngrids_wrf
-        deallocate(ngrd_rm(ma)%src_mask)
+        deallocate(ngrd_wr(ma)%src_mask)
       end do
       do mw=1,Ngrids_swan
         deallocate(ngrd_sw(mw)%dst_mask)
       end do
 
       end subroutine atm2wav_mask
-          
+
+!======================================================================
+
       subroutine wav2atm_mask()
       implicit none 
 

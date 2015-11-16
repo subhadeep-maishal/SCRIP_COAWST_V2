@@ -1,25 +1,10 @@
 #!/bin/csh
 #
-# Makefile for interpolation code
+# Makefile for SCRIP_COAWST interpolation code
 #
-# CVS:$Id: makefile,v 1.7 2000/04/19 21:46:44 pwjones Exp $
 #
-#COMPILE = xlf
-#COMPILE = f90
-#FLAGS = -O3 -r10000 -64 -I/usr/local/include
-#FLAGS = -g -DEBUG:div_check=3:subscript_check=ON:trap_uninitialized=ON:verbose_runtime=ON -r10000 -64 -I/usr/local/include 
-
-# these 3 lines are for USGS
 COMPILE = ifort -traceback -check bounds -lnetcdf -lnetcdff 
-#FLAGS = -O3 -I/usr/local/include -I/share/apps/netcdf/include
-#LIB  =  -L/share/apps/netcdf/lib -lnetcdf 
-#INCLUDE = /share/apps/netcdf/include
-
-# these 3 lines are for NCSU HPC
-#FLAGS = -O3 -I/usr/local/include -I/usr/local/apps/netcdf-3.6.1/pgi/6.0/x86_64/include
-#LIB  =  -L/usr/local/apps/netcdf-3.6.1/pgi/6.0/x86_64/lib -lnetcdf -L/opt/mx/lib64 
-#INCLUDE =
-
+#
 SRCDIR  = .
 EXEDIR  = .
 OBJSET  = \
@@ -62,19 +47,10 @@ OBJSET  = \
 	remap_read.o \
 	remap.o
 
-all: $(EXEDIR)/scrip  
-#$(EXEDIR)/scrip_test
+all: $(EXEDIR)/scrip_coawst
 
-$(EXEDIR)/scrip: $(OBJSET)
-	$(COMPILE) $(FLAGS) $(OBJSET) $(LIB) -o $(EXEDIR)/scrip
-
-#$(EXEDIR)/scrip_test: $(OBJTEST) scrip_test.o
-#	$(COMPILE) $(FLAGS) $(OBJTEST) scrip_test.o $(LIB) \
-#	-o $(EXEDIR)/scrip_test
-
-#scrip_test_repeat: $(OBJTEST) scrip_test_repeat.o
-#	$(COMPILE) $(FLAGS) $(OBJTEST) scrip_test_repeat.o $(LIB) \
-	-o $(EXEDIR)/scrip_test_repeat
+$(EXEDIR)/scrip_coawst: $(OBJSET)
+	$(COMPILE) $(FLAGS) $(OBJSET) $(LIB) -o $(EXEDIR)/scrip_coawst
 
 kinds_mod.o: $(SRCDIR)/kinds_mod.f $(INCLUDE)
 	$(COMPILE) $(FLAGS) -c $(SRCDIR)/kinds_mod.f
@@ -160,16 +136,6 @@ scrip_coawst.o: $(SRCDIR)/scrip_coawst.f kinds_mod.o constants.o iounits.o \
 		read_wrf.o scrip.o create_masks.o \
 		$(INCLUDE)
 	$(COMPILE) $(FLAGS) -c $(SRCDIR)/scrip_coawst.f
-
-#scrip_test.o: $(SRCDIR)/scrip_test.f kinds_mod.o constants.o iounits.o \
-		netcdf.o remap_vars.o grids.o remap.o remap_read.o \
-		$(INCLUDE)
-#	$(COMPILE) $(FLAGS) -c $(SRCDIR)/scrip_test.f
-
-#scrip_test_repeat.o: $(SRCDIR)/scrip_test_repeat.f kinds_mod.o \
-		constants.o netcdf.o \
-		iounits.o remap_vars.o grids.o $(INCLUDE)
-#	$(COMPILE) $(FLAGS) -c $(SRCDIR)/scrip_test_repeat.f
 
 clean: 
 	/bin/rm *.o *.mod

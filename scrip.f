@@ -218,19 +218,20 @@
 !     to a file.
 !
 !-----------------------------------------------------------------------
-
-      if (num_links_map1 /= max_links_map1) then
-        call resize_remap_vars(1, num_links_map1-max_links_map1)
-      endif
-      if ((num_maps > 1) .and. (num_links_map2 /= max_links_map2)) then
-        call resize_remap_vars(2, num_links_map2-max_links_map2)
+      if (num_links_map1.gt.0) then
+        if (num_links_map1 /= max_links_map1) then
+          call resize_remap_vars(1, num_links_map1-max_links_map1)
+        endif
+        if ((num_maps > 1).and.(num_links_map2 /= max_links_map2)) then
+          call resize_remap_vars(2, num_links_map2-max_links_map2)
+        endif
       endif
 
       call write_remap(map1_name, map2_name, 
      &                 interp_file1, interp_file2, output_opt)
 
 !-----------------------------------------------------------------------
-!     DEALLOCATE HERE for SCRIP_COAWST package  
+!     DEALLOCATE HERE for SCRIP_COAWST package
       write(stdout,*), "-------------------------------------------"
       write(stdout,*), "Reached the end of mapping one set of grids"
 !     deallocate arrays from grids.f
@@ -244,10 +245,14 @@
       deallocate ( grid1_corner_lat, grid2_corner_lat)
       deallocate ( grid1_bound_box, grid2_bound_box)
       deallocate( bin_addr1, bin_addr2, bin_lats, bin_lons)
-      deallocate( grid1_add_map1, grid2_add_map1) 
-      deallocate( wts_map1) 
+      deallocate( grid1_add_map1, grid2_add_map1)
+      deallocate( wts_map1)
 !     deallocate arrays from remap_conserv.f
-      deallocate(link_add1,link_add2)
+      if (num_links_map1.gt.0) then
+        deallocate(link_add1,link_add2)
+      endif
+
+      write(*,*) 'end of scrip package '
 
 !-----------------------------------------------------------------------
       end subroutine scrip_package

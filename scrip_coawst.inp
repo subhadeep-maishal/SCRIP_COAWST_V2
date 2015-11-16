@@ -1,0 +1,46 @@
+$INPUTS
+!
+! Number of ROMS grids
+!
+NGRIDS_ROMS=2
+! 
+! Number of SWAN grids
+! 
+NGRIDS_SWAN=2
+! 
+! Number of WRF grids
+! 
+NGRIDS_WRF=2
+!
+! ROMS GRIDS 
+!
+ROMS_GRIDS(1)='Sandy_roms_grid.nc'
+ROMS_GRIDS(2)='Sandy_roms_grid_ref3.nc'
+!
+! SWAN GRIDS 
+!
+SWAN_COORD(1)='Sandy_swan_coord.grd'
+SWAN_COORD(2)='Sandy_swan_coord_ref3.grd'
+!
+! SWAN GRID SIZE 
+!
+NUMX_SWAN_TEMP(1)=84
+NUMY_SWAN_TEMP(1)=64
+NUMX_SWAN_TEMP(2)=116
+NUMY_SWAN_TEMP(2)=86
+!
+! IF SWAN GRID IN CARTESIAN COORDINATES 
+!
+CARTESIAN(1)=1,
+CARTESIAN(2)=1,
+!
+! SWAN BATHYMETRY FILES 
+!
+BATH_FILE(1)='Sandy_swan_bathy.bot',
+BATH_FILE(2)='Sandy_swan_bathy_ref3.bot',
+!
+! WRF GRIDS  
+!
+WRF_GRIDS(1)='wrfinput_d01',
+WRF_GRIDS(2)='wrfinput_d02',
+$END 
